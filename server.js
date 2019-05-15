@@ -2,8 +2,13 @@ const express = require('express');
 
 const server = express();
 
-// parses body
-server.use(express.json());
+
+// import routers
+const userRouter = require("./users/userRouter");
+
+// built in middleware
+server.use(express.json()); // parses body
+
 
 server.get('/', (req, res) => {
   res.send(`<h2>Let's write some middleware!</h2>`)
@@ -14,5 +19,8 @@ server.get('/', (req, res) => {
 function logger(req, res, next) {
 
 };
+
+// routers - users
+server.use("/api/users", userRouter);
 
 module.exports = server;
