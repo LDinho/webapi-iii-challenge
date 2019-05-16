@@ -14,7 +14,27 @@ router.post('/:id/posts', (req, res) => {
 
 });
 
-router.get('/', (req, res) => {
+/*
+@GET: All Users
+@PARAMS: none
+@ROUTE: "/"
+*/
+
+router.get('/', async (req, res) => {
+  try {
+    const users = await get();
+
+    if (users.length) {
+      res.status(200).json(users)
+
+    } else {
+      res.status(400).json({message: `No users found`})
+
+    }
+  }
+  catch (err) {
+    res.status(500).json({error: `Unable to retrieve users`})
+  }
 
 });
 
