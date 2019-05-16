@@ -129,7 +129,7 @@ router.get('/:id/posts', validateUserId, async (req, res) => {
 @ROUTE: "/:id"
 */
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', validateUserId, async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -146,7 +146,27 @@ router.delete('/:id', async (req, res) => {
 
 });
 
-router.put('/:id', (req, res) => {
+/*
+@UPDATE: User
+@PARAMS: id[STRING]! name[STRING]!
+@ROUTE: "/:id"
+*/
+
+router.put('/:id', validateUserId, async (req, res) => {
+
+  const { id } = req.params;
+  const user = req.body;
+
+  try {
+    await update(id, user)
+      ?   res.status(200).json(user)
+      :   res.status(404)
+             .json({message: `user does not exist`})
+  }
+  catch (err) {
+    res.status(500)
+       .json({error: `Unable to process the request`})
+  }
 
 });
 
