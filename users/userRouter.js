@@ -123,7 +123,26 @@ router.get('/:id/posts', validateUserId, async (req, res) => {
 
 });
 
-router.delete('/:id', (req, res) => {
+/*
+@DELETE: User
+@PARAMS: id[STRING]!
+@ROUTE: "/:id"
+*/
+
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await remove(id)
+      ?   res.status(200)
+             .json({message: `user has been deleted`})
+      :   res.status(404)
+             .json({message: `user does not exist.`})
+  }
+  catch (err) {
+    res.status(500)
+       .json({error: `Unable to process the request`})
+  }
 
 });
 
