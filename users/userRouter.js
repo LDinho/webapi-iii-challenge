@@ -38,8 +38,15 @@ router.get('/', async (req, res) => {
 
 });
 
-router.get('/:id', (req, res) => {
+/*
+@GET: User
+@PARAMS: id[STRING]!
+@ROUTE: "/:id"
+*/
 
+router.get('/:id', validateUserId, (req, res) => {
+  console.log(req.user);
+  res.status(200).json(req.user)
 });
 
 router.get('/:id/posts', (req, res) => {
