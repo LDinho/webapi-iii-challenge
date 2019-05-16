@@ -2,9 +2,17 @@ const express = require('express');
 
 const router = express.Router();
 
-const db = require('./userDb')
+const db = require('./userDb');
+const db_posts = require('../posts/postDb');
 
-const { get, getById, getUserPosts, insert, remove, update } = db;
+const {
+  get,
+  getById,
+  getUserPosts,
+  insert,
+  remove,
+  update
+} = db;
 
 /*
 @ROOT-ROUTE: "/api/users"
@@ -12,7 +20,7 @@ const { get, getById, getUserPosts, insert, remove, update } = db;
 
 /*
 @POST: New user
-@PARAMS: User data
+@PARAMS: name[STRING]!
 @ROUTE: "/"
 */
 
@@ -53,7 +61,34 @@ router.post('/', validateUser, (req, res) => {
 
 });
 
-router.post('/:id/posts', (req, res) => {
+/*
+@POST: Create New Post From User with id
+@PARAMS: text[STRING]!
+@ROUTE: "/:id/posts"
+*/
+
+router.post(
+  '/:id/posts',
+  validateUserId,
+  validatePost,
+  async (req, res) => {
+
+  const { id } = req.params;
+
+  let post = {...req.body, user_id: id};
+
+  try {
+
+    if (post.text !== '') { // prevents empty text string to be inserted
+      post = await db_posts.insert(post);
+      res.status(201).json(post)
+    }
+
+  }
+  catch (err) {
+    res.status(500)
+       .json({error: `Unable to post message`})
+  }
 
 });
 
@@ -90,6 +125,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', validateUserId, (req, res) => {
   console.log(req.user);
   res.status(200).json(req.user)
+
 });
 
 /*
