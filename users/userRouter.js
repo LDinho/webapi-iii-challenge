@@ -75,6 +75,21 @@ function validateUser(req, res, next) {
 }
 
 function validatePost(req, res, next) {
+
+  if (req.body && Object.keys(req.body).length) {
+    next();
+
+  } else {
+    res.status(400).json({message: 'missing post data'})
+  }
+
+  if (req.body.text !== '') {
+    next();
+
+  } else {
+    res.status(400).json({message: 'missing required text field'})
+  }
+
 };
 
 module.exports = router;
