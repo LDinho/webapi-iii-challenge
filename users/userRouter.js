@@ -6,6 +6,10 @@ const db = require('./userDb')
 
 const { get, getById, getUserPosts, insert, remove, update } = db;
 
+/*
+@ROOT-ROUTE: "/api/users"
+*/
+
 router.post('/', (req, res) => {
 
 });
@@ -49,7 +53,34 @@ router.get('/:id', validateUserId, (req, res) => {
   res.status(200).json(req.user)
 });
 
-router.get('/:id/posts', (req, res) => {
+/*
+@GET:  A User's Posts
+@PARAMS: id[STRING]!
+@ROUTE: "/:id/posts"
+*/
+
+router.get('/:id/posts', validateUserId, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const posts = await getUserPosts(id);
+
+    if (posts.length) {
+      res.status(200).json(posts);
+
+    } else {
+      res.status(200)
+         .json({
+           message: `User has no posts.`
+         })
+    }
+  }
+  catch (err) {
+    res.status(500)
+       .json({
+         error: `Unable to retrieve user's posts.`
+       })
+  }
 
 });
 
