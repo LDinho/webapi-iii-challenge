@@ -10,7 +10,46 @@ const { get, getById, getUserPosts, insert, remove, update } = db;
 @ROOT-ROUTE: "/api/users"
 */
 
-router.post('/', (req, res) => {
+/*
+@POST: New user
+@PARAMS: User data
+@ROUTE: "/"
+*/
+
+router.post('/', validateUser, (req, res) => {
+  const user = req.body;
+
+  if (user) {
+    console.log("NEW USER:", user);
+    insert(user);
+    res.status(201).json(user);
+
+  } else {
+    res.status(500).json({
+      message: `Server error - unable to save new user!`
+    })
+  }
+
+  /*
+    ERROR in console:
+    UnhandledPromiseRejectionWarning: Error: Can't set headers after they are sent [duplicate]
+
+    // The error above appears when doing
+      another async call with the code below inside
+      this post request endpoint:
+
+      try {
+    await insert(user);
+    console.log("NEW USER:", user);
+    res.status(201).json(user)
+  }
+  catch (err) {
+    res.status(500).json({
+         message: `Server error - unable to save new user!`
+       })
+  }
+
+   */
 
 });
 
