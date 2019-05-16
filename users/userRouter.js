@@ -58,10 +58,23 @@ async function validateUserId(req, res, next) {
 
 function validateUser(req, res, next) {
 
-};
+  if (req.body && Object.keys(req.body).length) {
+    next();
+
+  } else {
+    res.status(400).json({message: 'missing user data'})
+  }
+
+  if (req.body.name !== '') {
+    next();
+
+  } else {
+    res.status(400).json({message: 'missing required name field'})
+  }
+
+}
 
 function validatePost(req, res, next) {
-
 };
 
 module.exports = router;
